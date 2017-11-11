@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".TakeTaxActivity">
+    <item
+        android:id="@+id/id_map_common"
+        app:showAsAction="never"
+        android:title="普通地图" />
+    <item
+        android:id="@+id/id_map_site"
+        app:showAsAction="never"
+        android:title="卫星地图" />
+    <item
+        android:id="@+id/id_map_traffic"
+        app:showAsAction="never"
+        android:title="实时交通(off)" />
+    <item
+        android:id="@+id/id_map_mlocation"
+        app:showAsAction="never"
+        android:title="我的位置" />
+</menu>
