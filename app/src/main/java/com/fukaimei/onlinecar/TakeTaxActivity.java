@@ -8,6 +8,7 @@ import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
@@ -16,6 +17,7 @@ import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.fukaimei.onlinecar.BicycleSharing.BicycleActivity;
 import com.fukaimei.onlinecar.alipay.task.AlipayTask;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
@@ -25,6 +27,8 @@ import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.cloud.SynthesizerListener;
 
 import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -32,6 +36,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.MenuItem;
@@ -82,9 +87,38 @@ public class TakeTaxActivity extends Activity implements OnClickListener {
                 speaking("等待司机接单");
                 mHandler.postDelayed(mAccept, mDelayTime);
             } else if (mStep == 1) {  //支付车费
-                String desc = String.format("从%s到%s的打车费", et_departure.getText().toString(), et_destination.getText().toString());
-                new AlipayTask(this, 1).execute("打车费", desc, "0.01");
-                bFinish = false;
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(TakeTaxActivity.this);
+                builder.setIcon(R.drawable.icon_car);
+                builder.setTitle("请选择支付车费方式");
+                final String[] pay = {"支付宝支付", "微信支付", "银联支付"};
+                //    设置一个单项选择下拉框
+                /**
+                 * 第一个参数指定我们要显示的一组下拉单选框的数据集合
+                 * 第二个参数代表索引，指定默认哪一个单选框被勾选上，0表示默认'支付宝支付' 会被勾选上
+                 * 第三个参数给每一个单选项绑定一个监听器
+                 */
+                builder.setSingleChoiceItems(pay, 0, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(TakeTaxActivity.this, "您选择的支付方式为：" + pay[which], Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder.setPositiveButton("确定支付", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String desc = String.format("从%s到%s的打车费", et_departure.getText().toString(), et_destination.getText().toString());
+                        new AlipayTask(TakeTaxActivity.this, 1).execute("快滴打车-打车费", desc, "0.01");
+                        bFinish = false;
+                    }
+                });
+                builder.setNegativeButton("取消支付", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.show();
             }
             mStep++;
         }
@@ -279,10 +313,138 @@ public class TakeTaxActivity extends Activity implements OnClickListener {
             if (isFirstLoc) {
                 isFirstLoc = false;
                 mUserPos = new LatLng(m_latitude, m_longitude);
-                MapStatusUpdate update = MapStatusUpdateFactory.newLatLngZoom(mUserPos, 15);
+                MapStatus mMapStatus;//地图当前状态
+                MapStatusUpdate mMapStatusUpdate;//地图将要变化成的状态
+                mMapStatus = new MapStatus.Builder().overlook(-45).build();
+                mMapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
+                mMapLayer.setMapStatus(mMapStatusUpdate);
+                MapStatusUpdate update = MapStatusUpdateFactory.newLatLngZoom(mUserPos, 18);
                 mMapLayer.animateMapStatus(update);
                 mMapView.setVisibility(View.VISIBLE);
+                //定义Maker坐标点
+                LatLng point = new LatLng(m_latitude + 0.00056, m_longitude);
+                //构建Marker图标
+                BitmapDescriptor bitmap = BitmapDescriptorFactory
+                        .fromResource(R.drawable.car_small);
+                //构建MarkerOption，用于在地图上添加Marker
+                OverlayOptions option = new MarkerOptions()
+                        .position(point)
+                        .icon(bitmap);
+                //在地图上添加Marker，并显示
+                mMapLayer.addOverlay(option);
+                //定义Maker坐标点
+                LatLng point1 = new LatLng(m_latitude, m_longitude + 0.0003);
+                //构建Marker图标
+                BitmapDescriptor bitmap1 = BitmapDescriptorFactory
+                        .fromResource(R.drawable.car_small);
+                //构建MarkerOption，用于在地图上添加Marker
+                OverlayOptions option1 = new MarkerOptions()
+                        .position(point1)
+                        .icon(bitmap1);
+                //在地图上添加Marker，并显示
+                mMapLayer.addOverlay(option1);
+                //定义Maker坐标点
+                LatLng point2 = new LatLng(m_latitude + 0.0005, m_longitude + 0.001);
+                //构建Marker图标
+                BitmapDescriptor bitmap2 = BitmapDescriptorFactory
+                        .fromResource(R.drawable.car_small);
+                //构建MarkerOption，用于在地图上添加Marker
+                OverlayOptions option2 = new MarkerOptions()
+                        .position(point2)
+                        .icon(bitmap2);
+                //在地图上添加Marker，并显示
+                mMapLayer.addOverlay(option2);
+                //定义Maker坐标点
+                LatLng point3 = new LatLng(m_latitude + 0.0003, m_longitude + 0.0001);
+                //构建Marker图标
+                BitmapDescriptor bitmap3 = BitmapDescriptorFactory
+                        .fromResource(R.drawable.car_small);
+                //构建MarkerOption，用于在地图上添加Marker
+                OverlayOptions option3 = new MarkerOptions()
+                        .position(point3)
+                        .icon(bitmap3);
+                //在地图上添加Marker，并显示
+                mMapLayer.addOverlay(option3);
+                //定义Maker坐标点
+                LatLng point4 = new LatLng(m_latitude + 0.0006, m_longitude);
+                //构建Marker图标
+                BitmapDescriptor bitmap4 = BitmapDescriptorFactory
+                        .fromResource(R.drawable.car_small);
+                //构建MarkerOption，用于在地图上添加Marker
+                OverlayOptions option4 = new MarkerOptions()
+                        .position(point4)
+                        .icon(bitmap4);
+                //在地图上添加Marker，并显示
+                mMapLayer.addOverlay(option4);
+                //定义Maker坐标点
+                LatLng point5 = new LatLng(m_latitude, m_longitude + 0.0004);
+                //构建Marker图标
+                BitmapDescriptor bitmap5 = BitmapDescriptorFactory
+                        .fromResource(R.drawable.car_small);
+                //构建MarkerOption，用于在地图上添加Marker
+                OverlayOptions option5 = new MarkerOptions()
+                        .position(point5)
+                        .icon(bitmap5);
+                //在地图上添加Marker，并显示
+                mMapLayer.addOverlay(option5);
+
+                //定义Maker坐标点
+                LatLng point6 = new LatLng(m_latitude, m_longitude - 0.0008);
+                //构建Marker图标
+                BitmapDescriptor bitmap6 = BitmapDescriptorFactory
+                        .fromResource(R.drawable.car_small);
+                //构建MarkerOption，用于在地图上添加Marker
+                OverlayOptions option6 = new MarkerOptions()
+                        .position(point6)
+                        .icon(bitmap6);
+                //在地图上添加Marker，并显示
+                mMapLayer.addOverlay(option1);
+                //定义Maker坐标点
+                LatLng point7 = new LatLng(m_latitude - 0.0005, m_longitude + 0.0004);
+                //构建Marker图标
+                BitmapDescriptor bitmap7 = BitmapDescriptorFactory
+                        .fromResource(R.drawable.car_small);
+                //构建MarkerOption，用于在地图上添加Marker
+                OverlayOptions option7 = new MarkerOptions()
+                        .position(point7)
+                        .icon(bitmap7);
+                //在地图上添加Marker，并显示
+                mMapLayer.addOverlay(option7);
+                //定义Maker坐标点
+                LatLng point8 = new LatLng(m_latitude - 0.0003, m_longitude - 0.0005);
+                //构建Marker图标
+                BitmapDescriptor bitmap8 = BitmapDescriptorFactory
+                        .fromResource(R.drawable.car_small);
+                //构建MarkerOption，用于在地图上添加Marker
+                OverlayOptions option8 = new MarkerOptions()
+                        .position(point8)
+                        .icon(bitmap8);
+                //在地图上添加Marker，并显示
+                mMapLayer.addOverlay(option8);
+                //定义Maker坐标点
+                LatLng point9 = new LatLng(m_latitude - 0.0003, m_longitude);
+                //构建Marker图标
+                BitmapDescriptor bitmap9 = BitmapDescriptorFactory
+                        .fromResource(R.drawable.car_small);
+                //构建MarkerOption，用于在地图上添加Marker
+                OverlayOptions option9 = new MarkerOptions()
+                        .position(point9)
+                        .icon(bitmap9);
+                //在地图上添加Marker，并显示
+                mMapLayer.addOverlay(option9);
+                //定义Maker坐标点
+                LatLng point10 = new LatLng(m_latitude, m_longitude - 0.0003);
+                //构建Marker图标
+                BitmapDescriptor bitmap10 = BitmapDescriptorFactory
+                        .fromResource(R.drawable.car_small);
+                //构建MarkerOption，用于在地图上添加Marker
+                OverlayOptions option10 = new MarkerOptions()
+                        .position(point10)
+                        .icon(bitmap10);
+                //在地图上添加Marker，并显示
+                mMapLayer.addOverlay(option10);
             }
+
         }
 
         public void onReceivePoi(BDLocation poiLocation) {
@@ -329,6 +491,11 @@ public class TakeTaxActivity extends Activity implements OnClickListener {
                     }
                 });
         popup.show();
+    }
+
+    public void onBicycle(View v) {
+        Intent intent = new Intent(TakeTaxActivity.this, BicycleActivity.class);
+        startActivity(intent);
     }
 
     // 定义获取动态权限

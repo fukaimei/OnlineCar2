@@ -51,6 +51,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".VoiceSettingsActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".BicycleSharing.BicycleActivity"
+            android:screenOrientation="portrait"/>
 
         <!-- 百度地图密钥 -->
         <meta-data

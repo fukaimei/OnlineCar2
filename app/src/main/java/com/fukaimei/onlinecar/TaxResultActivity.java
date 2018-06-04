@@ -50,8 +50,8 @@ public class TaxResultActivity extends AppCompatActivity implements
 	private Handler mHandler = new Handler();
 	private void initShareChannel() {
 		String url = "http://blog.csdn.net/fukaimei";
-		String title = "我在用仿滴滴打车";
-		String content = "你也用仿滴滴打车，方便快捷真省心。";
+		String title = "我在用快滴打车";
+		String content = "你也用快滴打车吧，方便快捷真省心。";
 		String imgage_url = "http://avatar.csdn.net/E/A/D/1_fukaimei.jpg";
 		ShareGridAdapter adapter = new ShareGridAdapter(this, mHandler, url,
 				title, content, imgage_url, null);

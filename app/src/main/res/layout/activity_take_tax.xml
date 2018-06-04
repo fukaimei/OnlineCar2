@@ -22,12 +22,6 @@
             android:layout_margin="2dp"
             android:orientation="horizontal">
 
-            <!--<Button-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:text="仿滴滴打车"-->
-            <!--android:textSize="16sp" />-->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
@@ -46,12 +40,13 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:paddingLeft="3dp"
-                    android:text="快滴打车"
+                    android:text="网约打车"
                     android:textColor="#FF7F00"
                     android:textSize="20sp" />
             </LinearLayout>
 
             <Button
+                android:id="@+id/onPopupMenuClick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -59,8 +54,16 @@
                 android:text="地图模式"
                 android:textSize="16sp" />
 
+            <ImageButton
+                android:id="@+id/onBicycle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/icon_bike"
+                android:layout_below="@id/onPopupMenuClick"
+                android:layout_alignParentRight="true"
+                android:layout_margin="10dp"
+                android:onClick="onBicycle" />
         </RelativeLayout>
-
     </LinearLayout>
 
     <LinearLayout

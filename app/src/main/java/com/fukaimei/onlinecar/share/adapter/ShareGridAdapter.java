@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -48,9 +49,11 @@ public class ShareGridAdapter extends BaseAdapter implements OnItemClickListener
     private int QZONE = 1;
     private int WECHAT = 2;
     private int WECHATCIRCLE = 3;
-    private int WEIBO = 4;
+    private int SINAWEIBO = 4;
+    private int MORE = 5;
     private int[] mShareIcons = {R.drawable.logo_qq, R.drawable.logo_qzone,
-            R.drawable.logo_wechat, R.drawable.logo_wechatcircle, R.drawable.logo_weibo};
+            R.drawable.logo_wechat, R.drawable.logo_wechatcircle,
+            R.drawable.logo_weibo, R.drawable.logo_more};
 
     public ShareGridAdapter(final Context context, Handler handler, String url,
                             String title, String content, final String imageUrl,
@@ -82,7 +85,8 @@ public class ShareGridAdapter extends BaseAdapter implements OnItemClickListener
             mChannelList.add(new ShareChanels("QQ空间", QZONE));
             mChannelList.add(new ShareChanels("微信好友", WECHAT));
             mChannelList.add(new ShareChanels("微信朋友圈", WECHATCIRCLE));
-            mChannelList.add(new ShareChanels("新浪微博", WEIBO));
+            mChannelList.add(new ShareChanels("新浪微博", SINAWEIBO));
+            mChannelList.add(new ShareChanels("更多", MORE));
         } else {
             mChannelList = channelList;
         }
@@ -160,9 +164,10 @@ public class ShareGridAdapter extends BaseAdapter implements OnItemClickListener
             Log.d(TAG, "begin shareToQzone");
             mTencent.shareToQzone((Activity) mContext, params, mShareListener);
             Log.d(TAG, "end shareToQzone");
-        } else if (item.channelType == WEIBO) {
-            // 腾讯微博分享需要QQ登录授权
-            mTencent.login((Activity) mContext, "all", mLoginListener);
+        } else if (item.channelType == SINAWEIBO) {
+
+        } else if (item.channelType == MORE) {
+
         }
     }
 

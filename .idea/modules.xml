@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/OnlineCar.iml" filepath="$PROJECT_DIR$/OnlineCar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/QRcode/QRcode.iml" filepath="$PROJECT_DIR$/QRcode/QRcode.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
